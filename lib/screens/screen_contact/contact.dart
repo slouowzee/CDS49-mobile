@@ -4,15 +4,37 @@ import 'package:url_launcher/url_launcher.dart';
 class ContactPage extends StatelessWidget {
   const ContactPage({Key? key}) : super(key: key);
 
-  // Fonction pour lancer l'appel
-  Future<void> _makePhoneCall(String phoneNumber) async {
-    final Uri launchUri = Uri.parse('tel:$phoneNumber');
-    try {
-      if (!await launchUrl(launchUri, mode: LaunchMode.externalApplication)) {
-        throw Exception('Could not launch $launchUri');
+  // Fonction pour afficher la boîte de dialogue de confirmation
+  Future<void> _confirmAndCall(BuildContext context, String phoneNumber) async {
+    final bool? result = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirmation'),
+          content: Text('Voulez-vous appeler le $phoneNumber ?'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Annuler'),
+              onPressed: () => Navigator.of(context).pop(false),
+            ),
+            TextButton(
+              child: const Text('Appeler'),
+              onPressed: () => Navigator.of(context).pop(true),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (result ?? false) {
+      final Uri launchUri = Uri.parse('tel:$phoneNumber');
+      try {
+        if (!await launchUrl(launchUri, mode: LaunchMode.externalApplication)) {
+          throw Exception('Could not launch $launchUri');
+        }
+      } catch (e) {
+        debugPrint(e.toString());
       }
-    } catch (e) {
-      debugPrint(e.toString());
     }
   }
 
@@ -65,7 +87,7 @@ class ContactPage extends StatelessWidget {
                       leading: const Icon(Icons.phone),
                       title: const Text('Téléphone'),
                       subtitle: GestureDetector(
-                        onTap: () => _makePhoneCall('0241XXXXXX'), // Remplacez par votre numéro
+                        onTap: () => _confirmAndCall(context, '0241XXXXXX'),
                         child: Text(
                           '02 41 XX XX XX',
                           style: TextStyle(
