@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
+
+const LatLng autoEcoleLocation = LatLng(47.4739, -0.5554);
+
 
 class ContactPage extends StatelessWidget {
   const ContactPage({Key? key}) : super(key: key);

@@ -91,6 +91,11 @@ class _ParamAppState extends State<ParamApp> {
                               SizedBox(height: 8),
                               Text('Prénom : ${userInfo?.prenomeleve ?? "..." }'),
                               Text('Nom : ${userInfo?.nomeleve ?? "..." }'),
+                              Text('Email : ${userInfo?.email ?? "..." }'),
+                              Text('Date de naissance : ${userInfo?.dateOfBirth ?? "..." }'),
+
+                              
+
                             ],
                           ),
                   ),
