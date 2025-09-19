@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 //import 'package:json_theme/json_theme.dart';
 import 'package:mobil_cds49/screens/screen_login/log_user.dart';
 import 'package:mobil_cds49/screens/screen_contact/contact.dart';
+import 'package:mobil_cds49/services/api/config.dart';
 import 'package:mobil_cds49/services/gestion_token/token.dart';
 import 'package:mobil_cds49/services/theme/generer_theme.dart';
 import 'package:mobil_cds49/services/theme/gestion_theme.dart';
@@ -20,6 +21,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();  
   // Masquer la barre de statut (Enlève l'heure, la batterie, etc...) 
   // Plein écran
+   // Appel pour lire les fichier .env spécifique Android Studio qui ne sais pas les lire directement
+  await AppConfig.load();
+
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   // Chargement des thèmes avant de lancer l'application  
   // await <Methode pour consulter le thème préféré de l'utilisateur>; 
