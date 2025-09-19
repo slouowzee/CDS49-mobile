@@ -7,26 +7,32 @@
   static const String apiBaseUrlC = "http://localhost:9000"; // Adresse IP de l'API --ici accès localhost depuis un navigateur web
 }*/
 
+import 'dart:convert';
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/services.dart' show rootBundle;
 
 class AppConfig {
-  static final String apiBaseUrl = _resolveApiUrl();
-  static const String appVersion = String.fromEnvironment('APP_VERSION');
+  static late final String apiBaseUrl;
+  static late final String appVersion;
 
-  static String _resolveApiUrl() {
+  // Méthode pour lire la configuration depuis le fichier .env.dev.json présent dans assets car Flutter ne sait pas lire les fichiers .env directement
+  static Future<void> load() async {
+    //CHANGER ICI POUR PASSER EN PRODUCTION
+    // final jsonString = await rootBundle.loadString('assets/env.prod.json');
+    final jsonString = await rootBundle.loadString('assets/env.dev.json');
+    final Map<String, dynamic> config = jsonDecode(jsonString);
+
     if (kIsWeb) {
-      return const String.fromEnvironment('API_URL_WEB');
+      apiBaseUrl = config['API_URL_WEB'];
     } else if (Platform.isAndroid) {
-      return const String.fromEnvironment('API_URL_ANDROID');
+      apiBaseUrl = config['API_URL_ANDROID'];
     } else if (Platform.isIOS) {
-      return const String.fromEnvironment('API_URL_IOS');
+      apiBaseUrl = config['API_URL_IOS'];
     } else {
-      // Fallback pour d'autres plateformes (Windows, macOS, etc.)
-      return const String.fromEnvironment(
-        'API_URL_WEB',
-        defaultValue: 'https://frontap3.dombtsig.local',
-      );
+      apiBaseUrl = config['API_URL_WEB'] ?? 'https://frontap3.dombtsig.local';
     }
+
+    appVersion = config['APP_VERSION'] ?? '1.0.0';
   }
 }
