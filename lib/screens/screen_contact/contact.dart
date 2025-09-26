@@ -103,9 +103,19 @@ class ContactPage extends StatelessWidget {
                       ),
                     ),
                     const ListTile(
+                      leading: Icon(Icons.web),
+                      title: Text('Site Web'),
+                      subtitle: Text('www.cds49.fr'),
+                    ),
+                    const ListTile(
                       leading: Icon(Icons.location_on),
                       title: Text('Adresse'),
                       subtitle: Text('2 Rue Adrien Recouvreur\n49100 Angers\nFrance'),
+                    ),
+                    const ListTile(
+                      leading: Icon(Icons.access_time),
+                      title: Text('Horaires d\'ouverture'),
+                      subtitle: Text('Lundi - Vendredi: 9h - 18h\nSamedi: 10h - 14h\nDimanche: Fermé'),
                     ),
                   ],
                 ),
