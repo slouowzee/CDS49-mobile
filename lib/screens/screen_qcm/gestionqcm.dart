@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mobil_cds49/screens/screen_qcm/affichageqcm.dart';
+import 'package:mobil_cds49/models/categoriequestion.dart';
 
 
 // Ecran permettant de sélectionner le nombre de questions et la catégorie pour un QCM
@@ -125,7 +126,10 @@ class _CodeQCMState extends State<CodeQCM> {
                           ),
                         ),
                         SizedBox(height: 16),
-                        
+
+                     
+                       
+
                       ],
                     ),
                   ),
@@ -152,6 +156,7 @@ class _CodeQCMState extends State<CodeQCM> {
             ],
           ),
         ),
-    );
+    )
+    ;
   }
 }
