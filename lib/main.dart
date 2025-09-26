@@ -162,9 +162,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   icon: const Icon(Icons.logout),
                   onPressed: () {
                     GestionToken.logout();
-                    setState(() {});
+                    Navigator.pop(context); 
                   },
-                ); 
+                );
               }
               // Affiche le bouton de connexion si l'utilisateur n'est pas connecté
               return IconButton(

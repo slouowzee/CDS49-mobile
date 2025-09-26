@@ -89,10 +89,11 @@ class _ParamAppState extends State<ParamApp> {
                                 ),
                               ),
                               SizedBox(height: 8),
-                              Text('Prénom : ${userInfo?.prenomeleve ?? "..." }'),
-                              Text('Nom : ${userInfo?.nomeleve ?? "..." }'),
-                              Text('Email : ${userInfo?.email ?? "..." }'),
-                              Text('Date de naissance : ${userInfo?.dateOfBirth ?? "..." }'),
+                              Text('ID : ${userInfo?.ideleve ?? "Non disponible" }'),
+                              Text('Prénom : ${userInfo?.prenomeleve ?? "Non disponible" }'),
+                              Text('Nom : ${userInfo?.nomeleve ?? "Non disponible" }'),
+                              Text('Email : ${userInfo?.mail ?? "Non disponible" }'),
+                              Text('Date de naissance : ${userInfo?.datedenaissance ?? "Non disponible" }'),
 
                               
 
