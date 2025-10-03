@@ -1,96 +1,80 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-// Modèle Timer
-class QuestionTimer {
-  final int duration;
+// Widget simple de question avec timer de 20 secondes
+class QuestionAvecTimer extends StatefulWidget {
+  final String questionTexte;
+  final List<String> listeReponses;
+  final Function(int?) quandValide; // Appelé quand l'utilisateur valide
+  final VoidCallback quandTempsEcoule; // Appelé si le temps est écoulé
 
-  QuestionTimer({required this.duration});
-  
-  factory QuestionTimer.fromJson(Map<String, dynamic> json) {
-    return QuestionTimer(
-      duration: json['duration'] ?? 20,
-    );
-  }
-}
-
-// Widget de question avec timer
-class QuestionWithTimer extends StatefulWidget {
-  final String question;
-  final List<String> options;
-  final Function(int? selectedIndex) onValidate;
-  final int timerDuration; // en secondes
-  final VoidCallback onTimeOut;
-
-  const QuestionWithTimer({
-    required this.question,
-    required this.options,
-    required this.onValidate,
-    this.timerDuration = 20,
-    required this.onTimeOut,
+  const QuestionAvecTimer({
+    required this.questionTexte,
+    required this.listeReponses,
+    required this.quandValide,
+    required this.quandTempsEcoule,
     Key? key,
   }) : super(key: key);
 
   @override
-  State<QuestionWithTimer> createState() => _QuestionWithTimerState();
+  State<QuestionAvecTimer> createState() => _QuestionAvecTimerState();
 }
 
-class _QuestionWithTimerState extends State<QuestionWithTimer> {
-  late int _remainingSeconds;
-  Timer? _timer;
-  int? _selectedOptionIndex;
-  bool _isValidated = false;
+class _QuestionAvecTimerState extends State<QuestionAvecTimer> {
+  // Variables principales
+  int secondes = 20; // Temps restant
+  Timer? monTimer; // Le timer
+  int? reponseChoisie; // Quelle réponse l'utilisateur a choisie
+  bool dejaValide = false; // Pour empêcher de valider 2 fois
 
   @override
   void initState() {
     super.initState();
-    _remainingSeconds = widget.timerDuration;
-    _startTimer();
+    lancerTimer(); // Démarre le timer au démarrage
   }
 
-  void _startTimer() {
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      setState(() {
-        if (_remainingSeconds > 0) {
-          _remainingSeconds--;
-        } else {
-          _handleTimeOut();
-        }
-      });
+  // Lance le compte à rebours
+  void lancerTimer() {
+    monTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (mounted) {
+        setState(() {
+          if (secondes > 0) {
+            secondes--; 
+          } else {
+            tempsEcoule(); 
+          }
+        });
+      }
     });
   }
 
-  void _handleTimeOut() {
-    _timer?.cancel();
-    if (!_isValidated) {
-      // Score = 0 si pas de réponse validée dans le temps
-      widget.onTimeOut();
+  // Quand le temps est écoulé
+  void tempsEcoule() {
+    monTimer?.cancel(); 
+    if (!dejaValide) {
+      widget.quandTempsEcoule(); // Score = 0
     }
   }
 
-  void _handleValidate() {
-    if (!_isValidated && _selectedOptionIndex != null) {
-      setState(() {
-        _isValidated = true;
-      });
-      _timer?.cancel();
-      widget.onValidate(_selectedOptionIndex);
+  // Valider une réponse 
+  void validerReponse() {
+    if (!dejaValide && reponseChoisie != null) {
+      dejaValide = true;
+      monTimer?.cancel(); 
+      widget.quandValide(reponseChoisie); 
     }
   }
 
-  Color _getTimerColor() {
-    if (_remainingSeconds > 10) {
-      return Colors.green;
-    } else if (_remainingSeconds > 5) {
-      return Colors.orange;
-    } else {
-      return Colors.red;
-    }
+  // Couleur qui change selon le temps restant
+  Color couleurTimer() {
+    if (secondes > 10) return Colors.green;
+    if (secondes > 5) return Colors.orange;
+    return Colors.red;
   }
 
   @override
   void dispose() {
-    _timer?.cancel();
+    monTimer?.cancel(); // Annule le timer au changement de la page 
     super.dispose();
   }
 
@@ -98,144 +82,157 @@ class _QuestionWithTimerState extends State<QuestionWithTimer> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Question'),
+        title: Text('Question'),
+        backgroundColor: Colors.black,
         actions: [
-          // Timer display dans l'AppBar
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Center(
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: _getTimerColor(),
-                  borderRadius: BorderRadius.circular(20),
+          // Badge du timer en haut à droite
+          Container(
+            margin: EdgeInsets.all(12),
+            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: couleurTimer(),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.timer, color: Colors.white, size: 20),
+                SizedBox(width: 6),
+                Text(
+                  '$secondes s',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
                 ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(Icons.timer, color: Colors.white, size: 20),
-                    const SizedBox(width: 4),
-                    Text(
-                      '$_remainingSeconds s',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              ],
             ),
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Barre de progression du timer
-            LinearProgressIndicator(
-              value: _remainingSeconds / widget.timerDuration,
-              backgroundColor: Colors.grey[300],
-              color: _getTimerColor(),
-              minHeight: 8,
-            ),
-            const SizedBox(height: 24),
-            
-            // Question
-            Card(
-              elevation: 2,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  widget.question,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 24),
-            
-            // Options de réponse
-            Expanded(
-              child: ListView.builder(
-                itemCount: widget.options.length,
-                itemBuilder: (context, index) {
-                  final isSelected = _selectedOptionIndex == index;
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 12.0),
-                    child: InkWell(
-                      onTap: _isValidated
-                          ? null
-                          : () {
-                              setState(() {
-                                _selectedOptionIndex = index;
-                              });
-                            },
-                      child: Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: isSelected
-                              ? Colors.blue.shade100
-                              : Colors.grey.shade100,
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            color: isSelected ? Colors.blue : Colors.grey.shade300,
-                            width: isSelected ? 2 : 1,
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(
-                              isSelected ? Icons.radio_button_checked
-                              : Icons.radio_button_unchecked,
-                              color: isSelected ? Colors.blue : Colors.grey,
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Text(
-                                widget.options[index],
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: isSelected
-                                      ? FontWeight.w600
-                                      : FontWeight.normal,
-                                ),
-                              ),
-                            ),
-                          ],
+      body: Column(
+        children: [
+          // Barre de progression colorée
+          LinearProgressIndicator(
+            value: secondes / 20,
+            color: couleurTimer(),
+            backgroundColor: Colors.grey[300],
+            minHeight: 6,
+          ),
+
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  SizedBox(height: 16),
+
+                  // La question
+                  Card(
+                    elevation: 3,
+                    child: Padding(
+                      padding: EdgeInsets.all(20),
+                      child: Text(
+                        widget.questionTexte,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
-                  );
-                },
+                  ),
+
+                  SizedBox(height: 24),
+
+                  // Liste des réponses
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: widget.listeReponses.length,
+                      itemBuilder: (context, index) {
+                        bool estChoisie = reponseChoisie == index;
+
+                        return Padding(
+                          padding: EdgeInsets.only(bottom: 12),
+                          child: InkWell(
+                            onTap: dejaValide
+                                ? null // Ne peut plus choisir après validation
+                                : () {
+                                    setState(() {
+                                      reponseChoisie = index;
+                                    });
+                                  },
+                            child: Container(
+                              padding: EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: estChoisie
+                                    ? Colors.blue.shade100
+                                    : Colors.grey.shade100,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: estChoisie
+                                      ? Colors.blue
+                                      : Colors.grey.shade300,
+                                  width: estChoisie ? 2 : 1,
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    estChoisie
+                                        ? Icons.radio_button_checked
+                                        : Icons.radio_button_unchecked,
+                                    color: estChoisie
+                                        ? Colors.blue
+                                        : Colors.grey,
+                                  ),
+                                  SizedBox(width: 12),
+                                  Expanded(
+                                    child: Text(
+                                      widget.listeReponses[index],
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: estChoisie
+                                            ? FontWeight.w600
+                                            : FontWeight.normal,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+
+                  SizedBox(height: 16),
+
+                  // Bouton de validation
+                  ElevatedButton(
+                    onPressed: dejaValide || reponseChoisie == null
+                        ? null // Désactivé si déjà validé ou rien de choisi
+                        : validerReponse,
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.all(16),
+                      backgroundColor: Colors.blue,
+                      disabledBackgroundColor: Colors.grey,
+                    ),
+                    child: Text(
+                      dejaValide ?  'Valider ma réponse' : 'Valider ma réponse',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-            
-            // Bouton de validation
-            ElevatedButton(
-              onPressed: _isValidated || _selectedOptionIndex == null
-                  ? null
-                  : _handleValidate,
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.all(16),
-                backgroundColor: Colors.blue,
-                disabledBackgroundColor: Colors.grey,
-              ),
-              child: Text(
-                _isValidated ? 'Réponse validée' : 'Valider',
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

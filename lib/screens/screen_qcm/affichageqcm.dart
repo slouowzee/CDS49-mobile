@@ -29,24 +29,24 @@ class _AffichageQCM extends State<AffichageQCM> {
   int _currentIndex = 0;
   int score = 0;
   
-  // Variables pour le timer
+
   Timer? _timer;
-  int _secondesRestantes = 20; // RÈGLE 2 & 3: 20 secondes par question
+  int _secondesRestantes = 20; 
   bool _reponseValidee = false;
   
   @override
   void initState() {
     super.initState();    
-    _futureQuestions = QuestionApi().getQuestion(
+    _futureQuestions = QuestionApi().getQuestion( 
       widget.nbQuestions, 
       widget.categorieQuestion
-    );
+    ); // recupere les questions depuis l'API
   }
 
-  // Démarre le timer quand les questions sont chargées
+ 
   void _demarrerTimer() {
-    _timer?.cancel(); // Annule le timer précédent si existant
-    _secondesRestantes = 20; // RÈGLE 3: Timer démarre à 20 secondes
+    _timer?.cancel(); // enleve un timer s'il yen a un
+    _secondesRestantes = 20; 
     _reponseValidee = false;
     
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
@@ -68,9 +68,8 @@ class _AffichageQCM extends State<AffichageQCM> {
     if (!_reponseValidee) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text(' Temps écoulé ! Aucun point pour cette question.'),
+          content: Text('  Aucun point pour cette question.'),
           duration: Duration(seconds: 2),
-          backgroundColor: Colors.red,
         ),
       );
       // Passe à la question suivante sans incrémenter le score
@@ -78,11 +77,11 @@ class _AffichageQCM extends State<AffichageQCM> {
     }
   }
 
-  // Charge la prochaine question et vérifie les réponses sélectionnées
+  // Gere la validation d'une reponse et de passer à celle d'apres
   void _chargerProchaineQuestion(List<Reponse> reponsesCochees) {
-    // RÈGLE 4: Seules les réponses VALIDÉES sont prises en compte
-    if (_reponseValidee) return; // Empêche la double validation
-    
+    // Prend en compte les réponses cochées par l'utilisateur
+    if (_reponseValidee) return;
+
     _reponseValidee = true;
     _timer?.cancel(); // Arrête le timer après validation
 
@@ -98,7 +97,6 @@ class _AffichageQCM extends State<AffichageQCM> {
         selectionsUtilisateur.length == bonnesReponses.length &&
         selectionsUtilisateur.containsAll(bonnesReponses);
 
-    // SI toutes les réponses sélectionnées sont correctes, on incrémente le score
     if (toutesBonnes) {
       score++;
     }
@@ -125,15 +123,7 @@ class _AffichageQCM extends State<AffichageQCM> {
     }
   }
 
-  Color _getCouleurTimer() {
-    if (_secondesRestantes > 10) {
-      return Colors.green;
-    } else if (_secondesRestantes > 5) {
-      return Colors.orange;
-    } else {
-      return Colors.red;
-    }
-  }
+
 
   @override
   void dispose() {
@@ -170,7 +160,6 @@ class _AffichageQCM extends State<AffichageQCM> {
             Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              color: _getCouleurTimer().withOpacity(0.1),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -187,7 +176,6 @@ class _AffichageQCM extends State<AffichageQCM> {
                       vertical: 8
                     ),
                     decoration: BoxDecoration(
-                      color: _getCouleurTimer(),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Row(
@@ -195,14 +183,14 @@ class _AffichageQCM extends State<AffichageQCM> {
                       children: [
                         const Icon(
                           Icons.alarm, 
-                          color: Colors.white, 
+                          color: Colors.black, 
                           size: 20
                         ),
                         const SizedBox(width: 8),
                         Text(
                           '$_secondesRestantes s',
                           style: const TextStyle(
-                            color: Colors.white,
+                            color: Colors.black,
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
                           ),
@@ -217,8 +205,7 @@ class _AffichageQCM extends State<AffichageQCM> {
             // Barre de progression du timer
             LinearProgressIndicator(
               value: _secondesRestantes / 20,
-              backgroundColor: Colors.grey[300],
-              color: _getCouleurTimer(),
+              backgroundColor: Colors.black,
               minHeight: 4,
             ),
             
