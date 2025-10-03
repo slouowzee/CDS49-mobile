@@ -45,8 +45,13 @@ class BottomNavbar extends StatelessWidget {
           label: 'Paramètres',
         ),
         NavigationDestination(
-          icon: Icon(Icons.contact_page), // Choisissez l'icône appropriée
-          label: 'Nous contacter', // Choisissez le label approprié
+          icon: Icon(Icons.contact_page), 
+          label: 'Nous contacter',
+        ),
+
+        NavigationDestination (
+          icon: Icon(Icons.app_registration), 
+          label: 'Inscription', 
         ),
       ],
     );

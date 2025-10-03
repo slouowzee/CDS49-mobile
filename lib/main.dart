@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mobil_cds49/screens/screen_inscription/inscription_utilisateur.dart';
 //import 'package:json_theme/json_theme.dart';
 import 'package:mobil_cds49/screens/screen_login/log_user.dart';
 import 'package:mobil_cds49/screens/screen_contact/contact.dart';
@@ -136,6 +137,9 @@ class _MyHomePageState extends State<MyHomePage> {
           break;
         case 3:
           currentBody = const ContactPage();
+        case 4:
+          currentBody = const PageInscription();
+          break;
         default:
           currentBody = const Center(child: Text('Page introuvable'));
       }

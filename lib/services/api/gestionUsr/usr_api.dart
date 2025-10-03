@@ -79,12 +79,71 @@ Future<Map<String, dynamic>?> loginUser(String mail,String paswd) async {
       if (response.statusCode == 200) {
         // Récupération des données utilisateur
         final jsonBody = json.decode(response.body);
-        final userJson = jsonBody['data']['user'];
-        return User.fromJson(userJson);
+        // Try several locations for the user object
+        Map<String, dynamic>? userJson;
+        if (jsonBody is Map<String, dynamic>) {
+          if (jsonBody.containsKey('data')) {
+            final data = jsonBody['data'];
+            if (data is Map<String, dynamic>) {
+              if (data.containsKey('user')) {
+                userJson = (data['user'] as Map<String, dynamic>?) ;
+              } else {
+                // maybe data itself is the user object
+                userJson = (data as Map<String, dynamic>?);
+              }
+            }
+          }
+          // fallback: top-level 'user'
+          if (userJson == null && jsonBody.containsKey('user')) {
+            userJson = (jsonBody['user'] as Map<String, dynamic>?);
+          }
+          // fallback: if body looks like user directly
+          if (userJson == null) {
+            // check for keys that look like user fields
+            final possibleKeys = ['ideleve', 'nomeleve', 'mail'];
+            if (possibleKeys.any((k) => jsonBody.containsKey(k))) {
+              userJson = jsonBody.cast<String, dynamic>();
+            }
+          }
+        }
+
+        if (userJson != null) {
+          return User.fromJson(userJson);
+        } else {
+          // Unexpected payload shape - log (for debugging) and return null
+          // ignore: avoid_print
+          print('[UsrApi.infoUser] Unexpected JSON shape: ' + response.body);
+          return null;
+        }
       }
     } catch (e) {
+      // ignore: avoid_print
+      print('[UsrApi.infoUser] Exception: $e');
       return null; // Erreur réponse serveur
     }
     return null; // Non autorisé, utilisateur non connecté ou token manquant (période de session expirée)
+  }
+
+  /// Debug helper: returns the raw response body and status code from profile/get.
+  /// Useful to call during development to inspect the exact JSON returned by the server.
+  static Future<Map<String, dynamic>?> debugGetProfileRaw() async {
+    final token = await GestionToken.getToken();
+    if (token == null || token.isEmpty) return null;
+    final url = Uri.parse('${AppConfig.apiBaseUrl}/api/profile/get');
+    try {
+      final response = await http.get(
+        url,
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+      return { 'status': response.statusCode, 'body': response.body };
+    } catch (e) {
+      // ignore: avoid_print
+      print('[UsrApi.debugGetProfileRaw] Exception: $e');
+      return null;
+    }
   }
 }
