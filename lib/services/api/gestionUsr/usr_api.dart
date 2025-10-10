@@ -225,4 +225,104 @@ Future<Map<String, dynamic>?> loginUser(String mail,String paswd) async {
       return null;
     }
   }
+
+  // Permet d'inscrire un nouvel utilisateur avec hash bcrypt côté serveur
+  Future<Map<String, dynamic>?> registerUser({
+    required String nom,
+    required String prenom,
+    required String email,
+    required String password,
+    required String dateNaissance,
+  }) async {
+    print('\n[DEBUG REGISTER] ═══════════════════════════════════════');
+    print('[DEBUG REGISTER] 📝 Tentative d\'inscription');
+    print('[DEBUG REGISTER] ═══════════════════════════════════════');
+    print('[DEBUG REGISTER] 👤 Nom: $nom');
+    print('[DEBUG REGISTER] 👤 Prénom: $prenom');
+    print('[DEBUG REGISTER] 📧 Email: $email');
+    print('[DEBUG REGISTER] 🎂 Date de naissance: $dateNaissance');
+    print('[DEBUG REGISTER] 🌐 URL: ${AppConfig.apiBaseUrl}/api/register');
+
+    try {
+      final response = await http.post(
+        Uri.parse('${AppConfig.apiBaseUrl}/api/register'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'nomeleve': nom,
+          'prenomeleve': prenom,
+          'email': email,
+          'password': password,
+          'datedenaissance': dateNaissance,
+        }),
+      );
+
+      print('[DEBUG REGISTER] 📥 Réponse reçue - Status: ${response.statusCode}');
+      print('[DEBUG REGISTER] 📄 Body: ${response.body}');
+
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        
+        if (data['status'] == "success") {
+          print('[DEBUG REGISTER] ✅ Inscription réussie !');
+          print('[DEBUG REGISTER] ═══════════════════════════════════════\n');
+          return {
+            "status": "success",
+            "message": data['message'] ?? "Inscription réussie",
+            "user": data['data']?['user']
+          };
+        }
+      }
+
+      if (response.statusCode == 400) {
+        final data = jsonDecode(response.body);
+        print('[DEBUG REGISTER] ❌ Erreur 400 - Données invalides');
+        print('[DEBUG REGISTER] ═══════════════════════════════════════\n');
+        return {
+          "status": "error",
+          "message": data['message'] ?? "Données manquantes ou invalides",
+        };
+      }
+
+      if (response.statusCode == 404) {
+        print('[DEBUG REGISTER] ❌ Erreur 404 - Route introuvable');
+        print('[DEBUG REGISTER] 💡 La route API n\'existe pas sur le serveur');
+        print('[DEBUG REGISTER] 💡 Vérifiez:');
+        print('[DEBUG REGISTER]    - L\'URL: ${AppConfig.apiBaseUrl}/api/register');
+        print('[DEBUG REGISTER]    - Que la route est bien définie côté serveur');
+        print('[DEBUG REGISTER]    - La configuration dans env.json');
+        print('[DEBUG REGISTER] ═══════════════════════════════════════\n');
+        return {
+          "status": "error",
+          "message": "Route d'inscription introuvable - Vérifiez la configuration du serveur",
+        };
+      }
+
+      if (response.statusCode == 409) {
+        print('[DEBUG REGISTER] ❌ Erreur 409 - Email déjà utilisé');
+        print('[DEBUG REGISTER] ═══════════════════════════════════════\n');
+        return {
+          "status": "error",
+          "message": "Cet email est déjà utilisé",
+        };
+      }
+
+      print('[DEBUG REGISTER] ❌ Erreur ${response.statusCode} - Non gérée');
+      print('[DEBUG REGISTER] ═══════════════════════════════════════\n');
+      return {
+        "status": "error",
+        "message": "Erreur serveur (${response.statusCode})",
+      };
+    } catch (e) {
+      print('[DEBUG REGISTER] 💥 EXCEPTION - Inscription impossible !');
+      print('[DEBUG REGISTER] 🔴 Type: ${e.runtimeType}');
+      print('[DEBUG REGISTER] 🔴 Message: $e');
+      print('[DEBUG REGISTER] ═══════════════════════════════════════\n');
+      return {
+        "status": "error",
+        "message": "❌ SERVEUR INACCESSIBLE - Vérifiez qu'il est démarré",
+      };
+    }
+  }
 }
