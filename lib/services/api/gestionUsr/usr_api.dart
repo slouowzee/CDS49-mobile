@@ -8,57 +8,98 @@ class UsrApi
 {
 // Permet de se connecter à l'API et de récupérer les informations de l'utilisateur
 Future<Map<String, dynamic>?> loginUser(String mail,String paswd) async {
-  final response = await http.post(
-    Uri.parse('${AppConfig.apiBaseUrl}/api/login'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: jsonEncode(<String, String>{
-      'email': mail,      
-      'password': paswd,   
-    }),
+  print('\n[DEBUG] ═══════════════════════════════════════');
+  print('[DEBUG] 🔐 Tentative de connexion');
+  print('[DEBUG] ═══════════════════════════════════════');
+  print('[DEBUG] 📧 Email: $mail');
+  print('[DEBUG] 🌐 URL: ${AppConfig.apiBaseUrl}/api/login');
+  
+  try {
+    final response = await http.post(
+      Uri.parse('${AppConfig.apiBaseUrl}/api/login'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'email': mail,      
+        'password': paswd,   
+      }),
+    );
     
-  );
-  // Vérification du statut de la réponse 
-  if (response.statusCode == 200) {
-    final data = jsonDecode(response.body);
+    print('[DEBUG] 📥 Réponse reçue - Status: ${response.statusCode}');
+    print('[DEBUG] 📄 Body: ${response.body}');
+    
+    // Vérification du statut de la réponse 
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
 
-    if (data['status'] == "success") {
-  // Enregistrement du token    
-      await GestionToken.saveToken(data['data']['token']); 
-      return {"message": data['message'], "user": data['data']['user'], "token": data['data']['token']};
+      if (data['status'] == "success") {
+        print('[DEBUG] ✅ Connexion réussie !');
+        print('[DEBUG] ═══════════════════════════════════════\n');
+        // Enregistrement du token    
+        await GestionToken.saveToken(data['data']['token']); 
+        return {"message": data['message'], "user": data['data']['user'], "token": data['data']['token']};
+      }
     }
-  }
 
-  if (response.statusCode == 400) {
-    // Si le statut est 400, Données manquantes. Email et mot de passe sont requis.
+    if (response.statusCode == 400) {
+      print('[DEBUG] ❌ Erreur 400 - Données manquantes');
+      print('[DEBUG] ═══════════════════════════════════════\n');
+      return {
+        "message": "Email et mot de passe requis",
+        "user": null,
+        "token": null
+      };
+    }
+
+    if (response.statusCode == 401) {
+      print('[DEBUG] ❌ Erreur 401 - Authentification refusée');
+      print('[DEBUG] 💡 Le serveur a répondu MAIS refuse les identifiants');
+      print('[DEBUG] 💡 Cela peut signifier:');
+      print('[DEBUG]    - Email ou mot de passe incorrect');
+      print('[DEBUG]    - Mot de passe hashé avec une config différente');
+      print('[DEBUG] ═══════════════════════════════════════\n');
+      return {
+        "message": "Identifiants incorrects",
+        "user": null,
+        "token": null
+      };
+    }
+
+    if (response.statusCode == 405) {
+      print('[DEBUG] ❌ Erreur 405 - Méthode non autorisée');
+      print('[DEBUG] ═══════════════════════════════════════\n');
+      return {
+        "message": "Méthode non autorisée",
+        "user": null,
+        "token": null
+      };
+    }
+
+    print('[DEBUG] ❌ Erreur ${response.statusCode} - Non gérée');
+    print('[DEBUG] ═══════════════════════════════════════\n');
     return {
-      "message": "Email et mot de passe requis",
+      "message": "Erreur serveur (${response.statusCode})",
+      "user": null,
+      "token": null
+    };
+    
+  } catch (e) {
+    print('[DEBUG] 💥 EXCEPTION - Connexion impossible !');
+    print('[DEBUG] 🔴 Type: ${e.runtimeType}');
+    print('[DEBUG] 🔴 Message: $e');
+    print('[DEBUG] 💡 Le serveur est probablement:');
+    print('[DEBUG]    - Hors ligne');
+    print('[DEBUG]    - Inaccessible depuis votre appareil');
+    print('[DEBUG]    - Bloqué par un firewall');
+    print('[DEBUG] ═══════════════════════════════════════\n');
+    return {
+      "message": "❌ SERVEUR INACCESSIBLE - Vérifiez qu'il est démarré",
       "user": null,
       "token": null
     };
   }
-
-  if (response.statusCode == 401) {
-    // Si le statut est 401, l'authentification a échoué
-    return {
-      "message": "Identifiants incorrects",
-      "user": null,
-      "token": null
-    };
-  }
-
-  if (response.statusCode == 405) {
-    // Si le statut est 405, la méthode n'est pas autorisée
-    return {
-      "message": "Méthode non autorisée",
-      "user": null,
-      "token": null
-    };
-  }
-
-  return null; // Retourne null si la connexion échoue
-  }
+}
 
 // Permet de récupérer les informations de l'utilisateur connecté
   static Future<User?> infoUser() async {
