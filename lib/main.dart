@@ -164,9 +164,17 @@ class _MyHomePageState extends State<MyHomePage> {
               if (snapshot.data == true) {
                 return IconButton(
                   icon: const Icon(Icons.logout),
-                  onPressed: () {
-                    GestionToken.logout();
-                    Navigator.pop(context); 
+                  onPressed: () async {
+                    await GestionToken.logout();
+                    if (mounted) {
+                      setState(() {
+                        currentPageIndex = 0;
+                        currentBody = Accueil(onNavigate: afficherNouvellePage);
+                      });
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Déconnexion réussie')),
+                      );
+                    }
                   },
                 );
               }

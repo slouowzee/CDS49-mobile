@@ -26,10 +26,12 @@ class _LoginUtilisateurState extends State<LoginUtilisateur> {
       if (!mounted) return;
 
       if (result != null && result['user'] != null) {
+        final prenom = result['user']['prenomeleve'] ?? '';
+        final nom = result['user']['nomeleve'] ?? '';
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              'Connexion réussie ! Bienvenue ${result['user']['nomeleve']}',
+              'Connexion réussie ! Bienvenue $prenom $nom',
             ),
           ), // Affiche un message de succès
         );

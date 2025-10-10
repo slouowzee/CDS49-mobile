@@ -19,8 +19,8 @@ class AppConfig {
   // Méthode pour lire la configuration depuis le fichier .env.dev.json présent dans assets car Flutter ne sait pas lire les fichiers .env directement
   static Future<void> load() async {
     //CHANGER ICI POUR PASSER EN PRODUCTION
-    // final jsonString = await rootBundle.loadString('assets/env.prod.json');
-    final jsonString = await rootBundle.loadString('assets/env.dev.json');
+    //final jsonString = await rootBundle.loadString('assets/env.prod.json');
+     final jsonString = await rootBundle.loadString('assets/env.dev.json');
     final Map<String, dynamic> config = jsonDecode(jsonString);
 
     if (kIsWeb) {

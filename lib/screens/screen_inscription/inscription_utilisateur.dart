@@ -87,7 +87,7 @@ class PageInscription extends StatelessWidget {
                 );
               },
               child: Text('Déjà inscrit ? Connectez-vous'),
-            ),
+              ),
             ],
         ),
       ),
