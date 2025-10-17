@@ -252,43 +252,71 @@ Future<Map<String, dynamic>?> loginUser(String mail,String paswd) async {
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode(<String, String>{
-          'nomeleve': nom,
-          'prenomeleve': prenom,
+          'nom': nom,
+          'prenom': prenom,
           'email': email,
           'telephone': telephone,
-          'password': password,
-          'datedenaissance': dateNaissance,
+          'motdepasse': password,
+          'datenaissance': dateNaissance,
         }),
       );
+      
+      print('[DEBUG REGISTER] 📤 Données envoyées:');
+      print('[DEBUG REGISTER] ${jsonEncode(<String, String>{
+        'nom': nom,
+        'prenom': prenom,
+        'email': email,
+        'telephone': telephone,
+        'motdepasse': '***',
+        'datenaissance': dateNaissance,
+      })}');
 
       print('[DEBUG REGISTER] 📥 Réponse reçue - Status: ${response.statusCode}');
       print('[DEBUG REGISTER] 📄 Body: ${response.body}');
 
       if (response.statusCode == 201 || response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        
-        if (data['status'] == "success") {
-          print('[DEBUG REGISTER] ✅ Inscription réussie !');
+        try {
+          final data = jsonDecode(response.body);
+          
+          if (data['status'] == "success") {
+            print('[DEBUG REGISTER] ✅ Inscription réussie !');
+            print('[DEBUG REGISTER] ═══════════════════════════════════════\n');
+            return {
+              "status": "success",
+              "message": data['message'] ?? "Inscription réussie",
+            };
+          }
+        } catch (e) {
+          print('[DEBUG REGISTER] ⚠️ Erreur de parsing mais statut 200/201');
+          print('[DEBUG REGISTER] L\'inscription a probablement réussi');
           print('[DEBUG REGISTER] ═══════════════════════════════════════\n');
           return {
             "status": "success",
-            "message": data['message'] ?? "Inscription réussie",
-            "user": data['data']?['user']
+            "message": "Inscription réussie",
           };
         }
       }
 
       if (response.statusCode == 400) {
-        final data = jsonDecode(response.body);
-        print('[DEBUG REGISTER] ❌ Erreur 400 - Données invalides');
-        print('[DEBUG REGISTER] 💡 Message serveur: ${data['message']}');
-        print('[DEBUG REGISTER] 💡 Détails: ${data['details'] ?? 'Non fournis'}');
-        print('[DEBUG REGISTER] ═══════════════════════════════════════\n');
-        return {
-          "status": "error",
-          "message": data['message'] ?? "Données manquantes ou invalides",
-          "details": data['details'],
-        };
+        try {
+          final data = jsonDecode(response.body);
+          print('[DEBUG REGISTER] ❌ Erreur 400 - Données invalides');
+          print('[DEBUG REGISTER] 💡 Message serveur: ${data['message']}');
+          print('[DEBUG REGISTER] 💡 Détails: ${data['details'] ?? 'Non fournis'}');
+          print('[DEBUG REGISTER] ═══════════════════════════════════════\n');
+          return {
+            "status": "error",
+            "message": data['message'] ?? "Données manquantes ou invalides",
+            "details": data['details'],
+          };
+        } catch (e) {
+          print('[DEBUG REGISTER] ❌ Erreur 400 - Impossible de parser la réponse');
+          print('[DEBUG REGISTER] ═══════════════════════════════════════\n');
+          return {
+            "status": "error",
+            "message": "Données manquantes ou invalides",
+          };
+        }
       }
 
       if (response.statusCode == 404) {
