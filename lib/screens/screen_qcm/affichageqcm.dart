@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobil_cds49/models/questionavecreponse.dart';
 import 'package:mobil_cds49/models/reponse.dart';
 import 'package:mobil_cds49/screens/screen_qcm/gestionscore.dart';
+import 'package:mobil_cds49/screens/screen_qcm/gestionqcm.dart';
 import 'package:mobil_cds49/screens/screen_qcm/modelaffichagequestion.dart';
 import 'package:mobil_cds49/services/api/gestionQuestion/question_api.dart';
 import 'dart:async';
@@ -125,6 +126,43 @@ class _AffichageQCM extends State<AffichageQCM> {
 
 
 
+  // Méthode pour annuler le quiz et revenir à la sélection
+  void _annulerQuiz() {
+    _timer?.cancel();
+    
+    // Afficher une boîte de dialogue de confirmation
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Annuler le quiz'),
+          content: const Text('Êtes-vous sûr de vouloir abandonner ce quiz ?\nVotre progression sera perdue.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Ferme la dialogue
+              },
+              child: const Text('Non'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Ferme la dialogue
+                // Retour à l'écran de sélection du QCM
+                widget.onNavigate?.call(
+                  CodeQCM(onNavigate: widget.onNavigate),
+                );
+              },
+              child: const Text(
+                'Oui, annuler',
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   void dispose() {
     _timer?.cancel();
@@ -163,6 +201,13 @@ class _AffichageQCM extends State<AffichageQCM> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  // Bouton d'annulation
+                  IconButton(
+                    icon: const Icon(Icons.close, color: Colors.red),
+                    onPressed: _annulerQuiz,
+                    tooltip: 'Annuler le quiz',
+                  ),
+                  
                   Text(
                     'Question ${_currentIndex + 1} / ${_questions.length}',
                     style: const TextStyle(
