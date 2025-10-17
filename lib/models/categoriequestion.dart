@@ -6,15 +6,16 @@ class CategorieQuestion {
 
   factory CategorieQuestion.fromJson(Map<String, dynamic> json) {
     // Support de plusieurs formats de noms de champs
-    final id = json['IDCatQuestion'] ?? 
-               json['idcategorie'] ?? 
+    final id = json['idcategorie'] ?? 
                json['id'] ?? 
+               json['IDCatQuestion'] ?? 
                json['idCatQuestion'] ?? 
                0;
                
-    final nom = json['LibCatQuestion'] ?? 
-                json['nomcategorie'] ?? 
+    final nom = json['libcategorie'] ?? 
                 json['nom'] ?? 
+                json['LibCatQuestion'] ?? 
+                json['nomcategorie'] ?? 
                 json['libelle'] ?? 
                 json['libCatQuestion'] ??
                 'Catégorie inconnue';

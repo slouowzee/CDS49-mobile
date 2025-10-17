@@ -24,7 +24,17 @@ class _ParamAppState extends State<ParamApp> {
   }
 
   Future<void> _loadUserInfo() async {
+    print('[PARAM_APP] 🔄 Chargement des infos utilisateur...');
     final info = await UsrApi.infoUser();
+    print('[PARAM_APP] 📦 Info reçue: $info');
+    if (info != null) {
+      print('[PARAM_APP] ✅ ID: ${info.ideleve}');
+      print('[PARAM_APP] ✅ Nom: ${info.nomeleve}');
+      print('[PARAM_APP] ✅ Prénom: ${info.prenomeleve}');
+      print('[PARAM_APP] ✅ Email: ${info.emaileleve}');
+    } else {
+      print('[PARAM_APP] ❌ Info est NULL');
+    }
     setState(() {
       userInfo = info;
       isLoading = false;
@@ -78,27 +88,49 @@ class _ParamAppState extends State<ParamApp> {
                     padding: EdgeInsets.all(16),
                     child: isLoading
                         ? Center(child: CircularProgressIndicator())
-                        : Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Informations utilisateur',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                        : userInfo == null
+                            ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.person_off,
+                                    size: 64,
+                                    color: Colors.grey,
+                                  ),
+                                  SizedBox(height: 16),
+                                  Text(
+                                    'Non connecté',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(height: 8),
+                                  Text(
+                                    'Connectez-vous pour voir vos informations',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
+                                ],
+                              )
+                            : Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Informations utilisateur',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(height: 8),
+                                  Text('ID : ${userInfo!.ideleve}'),
+                                  Text('Prénom : ${userInfo!.prenomeleve ?? "Non renseigné"}'),
+                                  Text('Nom : ${userInfo!.nomeleve ?? "Non renseigné"}'),
+                                  Text('Email : ${userInfo!.emaileleve ?? "Non renseigné"}'),
+                                  Text('Date de naissance : ${userInfo!.datenaissanceeleve ?? "Non renseigné"}'),
+                                ],
                               ),
-                              SizedBox(height: 8),
-                              Text('ID : ${userInfo?.ideleve ?? "..." }'),
-                              Text('Prénom : ${userInfo?.prenomeleve ?? "..." }'),
-                              Text('Nom : ${userInfo?.nomeleve ?? "..." }'),
-                              Text('Email : ${userInfo?.mail ?? "..." }'),
-                              Text('Date de naissance : ${userInfo?.datedenaissance ?? "..." }'),
-
-                              
-
-                            ],
-                          ),
                   ),
                 ),          
               ],

@@ -10,9 +10,9 @@ class CategorieApi {
   Future<List<CategorieQuestion>> getCategories() async {
     print('\n[DEBUG CATEGORIES] ═══════════════════════════════════════');
     print('[DEBUG CATEGORIES] 📚 Récupération des catégories');
-    print('[DEBUG CATEGORIES] 🌐 URL: ${AppConfig.apiBaseUrl}/api/categories');
+    print('[DEBUG CATEGORIES] 🌐 URL: ${AppConfig.apiBaseUrl}/api/categorie');
     
-    final response = await http.get(Uri.parse('${AppConfig.apiBaseUrl}/api/categories'));
+    final response = await http.get(Uri.parse('${AppConfig.apiBaseUrl}/api/categorie'));
     
     print('[DEBUG CATEGORIES] 📥 Status: ${response.statusCode}');
     print('[DEBUG CATEGORIES] 📄 Body: ${response.body}');
@@ -26,8 +26,10 @@ class CategorieApi {
       print('[DEBUG CATEGORIES] 🔢 Nombre de catégories: ${listeCategories.length}');
       
       final categories = listeCategories.map((c) {
-        print('[DEBUG CATEGORIES] 🔍 Parsing catégorie: $c');
-        return CategorieQuestion.fromJson(c);
+        print('[DEBUG CATEGORIES] 🔍 Parsing catégorie brute: $c');
+        final cat = CategorieQuestion.fromJson(c);
+        print('[DEBUG CATEGORIES] ✅ Catégorie créée: ID=${cat.idcategorie}, Nom=${cat.nomcategorie}');
+        return cat;
       }).toList();
       
       print('[DEBUG CATEGORIES] ✅ ${categories.length} catégories chargées');
