@@ -231,6 +231,7 @@ Future<Map<String, dynamic>?> loginUser(String mail,String paswd) async {
     required String nom,
     required String prenom,
     required String email,
+    required String telephone,
     required String password,
     required String dateNaissance,
   }) async {
@@ -240,6 +241,7 @@ Future<Map<String, dynamic>?> loginUser(String mail,String paswd) async {
     print('[DEBUG REGISTER] 👤 Nom: $nom');
     print('[DEBUG REGISTER] 👤 Prénom: $prenom');
     print('[DEBUG REGISTER] 📧 Email: $email');
+    print('[DEBUG REGISTER] 📞 Téléphone: $telephone');
     print('[DEBUG REGISTER] 🎂 Date de naissance: $dateNaissance');
     print('[DEBUG REGISTER] 🌐 URL: ${AppConfig.apiBaseUrl}/api/register');
 
@@ -253,6 +255,7 @@ Future<Map<String, dynamic>?> loginUser(String mail,String paswd) async {
           'nomeleve': nom,
           'prenomeleve': prenom,
           'email': email,
+          'telephone': telephone,
           'password': password,
           'datedenaissance': dateNaissance,
         }),
@@ -278,10 +281,13 @@ Future<Map<String, dynamic>?> loginUser(String mail,String paswd) async {
       if (response.statusCode == 400) {
         final data = jsonDecode(response.body);
         print('[DEBUG REGISTER] ❌ Erreur 400 - Données invalides');
+        print('[DEBUG REGISTER] 💡 Message serveur: ${data['message']}');
+        print('[DEBUG REGISTER] 💡 Détails: ${data['details'] ?? 'Non fournis'}');
         print('[DEBUG REGISTER] ═══════════════════════════════════════\n');
         return {
           "status": "error",
           "message": data['message'] ?? "Données manquantes ou invalides",
+          "details": data['details'],
         };
       }
 

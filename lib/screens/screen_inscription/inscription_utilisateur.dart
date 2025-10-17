@@ -14,6 +14,7 @@ class _PageInscriptionState extends State<PageInscription> {
   final TextEditingController nomController = TextEditingController();
   final TextEditingController prenomController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
+  final TextEditingController telephoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
   final TextEditingController dateNaissanceController = TextEditingController();
@@ -48,12 +49,13 @@ class _PageInscriptionState extends State<PageInscription> {
     final nom = nomController.text.trim();
     final prenom = prenomController.text.trim();
     final email = emailController.text.trim();
+    final telephone = telephoneController.text.trim();
     final password = passwordController.text;
     final confirmPassword = confirmPasswordController.text;
     final dateNaissance = dateNaissanceController.text;
 
     // Validations
-    if (nom.isEmpty || prenom.isEmpty || email.isEmpty || password.isEmpty || dateNaissance.isEmpty) {
+    if (nom.isEmpty || prenom.isEmpty || email.isEmpty || telephone.isEmpty || password.isEmpty || dateNaissance.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Veuillez remplir tous les champs')),
       );
@@ -90,6 +92,7 @@ class _PageInscriptionState extends State<PageInscription> {
       nom: nom,
       prenom: prenom,
       email: email,
+      telephone: telephone,
       password: password,
       dateNaissance: dateNaissance,
     );
@@ -127,6 +130,7 @@ class _PageInscriptionState extends State<PageInscription> {
     nomController.dispose();
     prenomController.dispose();
     emailController.dispose();
+    telephoneController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
     dateNaissanceController.dispose();
@@ -160,7 +164,7 @@ class _PageInscriptionState extends State<PageInscription> {
                 border: OutlineInputBorder(),
               ),
             ),
-            SizedBox(height: 20), 
+            SizedBox(height: 20),
             // Champ de saisie pour l'email
             TextField(
               controller: emailController,
@@ -170,6 +174,17 @@ class _PageInscriptionState extends State<PageInscription> {
                 border: OutlineInputBorder(),
               ),
               keyboardType: TextInputType.emailAddress,
+            ),
+            SizedBox(height: 20),
+            // Champ de saisie pour le numéro de téléphone
+            TextField(
+              controller: telephoneController,
+              decoration: InputDecoration(
+                labelText: 'Numéro de téléphone',
+                prefixIcon: Icon(Icons.phone),
+                border: OutlineInputBorder(),
+              ),
+              keyboardType: TextInputType.phone,
             ),
             SizedBox(height: 20),
             // Champ de saisie pour le mot de passe
@@ -192,7 +207,7 @@ class _PageInscriptionState extends State<PageInscription> {
                 ),
               ),
             ),
-            SizedBox(height: 20),
+
             TextField(
               controller: confirmPasswordController,
               obscureText: !isConfirmPasswordVisible,
