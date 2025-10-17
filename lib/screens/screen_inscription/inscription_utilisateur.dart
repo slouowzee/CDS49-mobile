@@ -207,6 +207,7 @@ class _PageInscriptionState extends State<PageInscription> {
                 ),
               ),
             ),
+            SizedBox(height: 20),
 
             TextField(
               controller: confirmPasswordController,

@@ -252,14 +252,24 @@ Future<Map<String, dynamic>?> loginUser(String mail,String paswd) async {
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode(<String, String>{
-          'nomeleve': nom,
-          'prenomeleve': prenom,
+          'nom': nom,
+          'prenom': prenom,
           'email': email,
           'telephone': telephone,
-          'password': password,
-          'datedenaissance': dateNaissance,
+          'motdepasse': password,
+          'datenaissance': dateNaissance,
         }),
       );
+      
+      print('[DEBUG REGISTER] 📤 Données envoyées:');
+      print('[DEBUG REGISTER] ${jsonEncode(<String, String>{
+        'nom': nom,
+        'prenom': prenom,
+        'email': email,
+        'telephone': telephone,
+        'motdepasse': '***',
+        'datenaissance': dateNaissance,
+      })}');
 
       print('[DEBUG REGISTER] 📥 Réponse reçue - Status: ${response.statusCode}');
       print('[DEBUG REGISTER] 📄 Body: ${response.body}');
