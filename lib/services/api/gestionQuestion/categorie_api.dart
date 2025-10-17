@@ -25,12 +25,7 @@ class CategorieApi {
       print('[DEBUG CATEGORIES] 📋 Liste catégories: $listeCategories');
       print('[DEBUG CATEGORIES] 🔢 Nombre de catégories: ${listeCategories.length}');
       
-      final categories = listeCategories.map((c) {
-        print('[DEBUG CATEGORIES] 🔍 Parsing catégorie brute: $c');
-        final cat = CategorieQuestion.fromJson(c);
-        print('[DEBUG CATEGORIES] ✅ Catégorie créée: ID=${cat.idcategorie}, Nom=${cat.nomcategorie}');
-        return cat;
-      }).toList();
+      final categories = listeCategories.map((c) => CategorieQuestion.fromJson(c)).toList();
       
       print('[DEBUG CATEGORIES] ✅ ${categories.length} catégories chargées');
       print('[DEBUG CATEGORIES] ═══════════════════════════════════════\n');
