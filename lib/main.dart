@@ -113,6 +113,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
   // Méthode pour empecher d'aller vers la page QCM si l'utilisateur n'est pas connecté
    Future<void> _onDestinationSelected(int index) async {
+    // Vérifier si l'utilisateur est connecté pour QCM
     if (index == 1) {
       final autorise = await GestionToken.isLogged();
       if (!autorise && mounted) {
@@ -122,6 +123,18 @@ class _MyHomePageState extends State<MyHomePage> {
         return;
       }
     }
+    
+    // Bloquer l'accès à l'inscription si déjà connecté
+    if (index == 4) {
+      final estConnecte = await GestionToken.isLogged();
+      if (estConnecte && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Vous êtes déjà connecté')),
+        );
+        return;
+      }
+    }
+    
   // Mise à jour du corps de la page
     setState(() {
       currentPageIndex = index;
