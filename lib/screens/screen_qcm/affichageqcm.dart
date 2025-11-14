@@ -119,6 +119,7 @@ class _AffichageQCM extends State<AffichageQCM> {
           key: UniqueKey(),
           nbQuestionsTotal: widget.nbQuestions,
           scoreRealise: score,
+          idCategorie: widget.categorieQuestion == 'random' ? null : int.tryParse(widget.categorieQuestion),
         ),
       );
     }

@@ -7,7 +7,8 @@ import 'package:mobil_cds49/services/api/gestionScore/score_api.dart';
 class GestionScore extends StatefulWidget {
   final int nbQuestionsTotal;
   final int scoreRealise;
-  const GestionScore({super.key, required this.nbQuestionsTotal, required this.scoreRealise});
+  final int? idCategorie;
+  const GestionScore({super.key, required this.nbQuestionsTotal, required this.scoreRealise, this.idCategorie});
 
   @override
   State<GestionScore> createState() => _GestionScoreState();
@@ -20,6 +21,8 @@ void _envoyerScoreEtNaviguer() async {
   final statusCode = await ScoreApi.envoyerScore(
     widget.scoreRealise,
     widget.nbQuestionsTotal,
+
+    widget.idCategorie,
   );
 
  // Vérifie si le widget est monté avant de naviguer 

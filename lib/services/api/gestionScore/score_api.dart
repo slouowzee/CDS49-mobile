@@ -5,7 +5,7 @@ import 'package:mobil_cds49/services/gestion_token/token.dart';
 
 class ScoreApi {
   // Envoie le score et le nombre de questions à l'API
-  static Future<int> envoyerScore(int score, int nbQuestions) async {  
+  static Future<int> envoyerScore(int score, int nbQuestions, int? idCategorie) async {  
   print('[SCORE_API] 💾 Envoi du score: $score/$nbQuestions');
   final token = await GestionToken.getToken();
   print('[SCORE_API] 🔑 Token récupéré: ${token != null ? "✅ (${token.length} caractères)" : "❌ NULL"}');
@@ -17,6 +17,7 @@ class ScoreApi {
   final url = Uri.parse('${AppConfig.apiBaseUrl}/api/scores/set');
   print('[SCORE_API] 🌐 URL: $url');
   print('[SCORE_API] 📤 Headers: Authorization: Bearer ${token.substring(0, 8)}...');
+  print('[SCORE_API] 📤 Body: score=$score, nbquestions=$nbQuestions, idcategorie=$idCategorie');
   try {
     final response = await http.post(
       url,
@@ -26,7 +27,9 @@ class ScoreApi {
         'Authorization': 'Bearer $token',
       },
       body: jsonEncode({
+        'token': token,
         'score': score,
+        'idcategorie': idCategorie,
         'nbquestions': nbQuestions,
       }),
     );    
