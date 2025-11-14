@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobil_cds49/models/usr.dart';
 import 'package:mobil_cds49/services/api/gestionUsr/usr_api.dart';
 import 'package:mobil_cds49/services/theme/gestion_theme.dart';
+import 'package:mobil_cds49/screens/screen_examens/mes_examens.dart';
 
 
 // Ecran de paramètres de l'application
@@ -132,11 +133,59 @@ class _ParamAppState extends State<ParamApp> {
                                 ],
                               ),
                   ),
-                ),          
+                ),
+                Card(
+                  margin: EdgeInsets.all(12),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const MesExamens(),
+                        ),
+                      );
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.school,
+                            size: 32,
+                            color: Colors.blue,
+                          ),
+                          SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Mes examens',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(height: 4),
+                                Text(
+                                  'Voir l\'historique de mes tests',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Icon(Icons.chevron_right),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
-          
         ],
       ),
     );
