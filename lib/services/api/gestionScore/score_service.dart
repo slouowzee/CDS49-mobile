@@ -24,7 +24,7 @@ class ScoreService {
       throw Exception('Token non disponible');
     }
 
-    String url = '$baseUrl/scores';
+    String url = '$baseUrl/scores/get';
     
     // Ajouter les paramètres de filtre si fournis
     if (dateDebut != null && dateFin != null) {
@@ -45,6 +45,7 @@ class ScoreService {
     );
 
     print('[SCORE_SERVICE] 📡 Status: ${response.statusCode}');
+    print('[SCORE_SERVICE] 📦 Body: ${response.body}');
 
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);
