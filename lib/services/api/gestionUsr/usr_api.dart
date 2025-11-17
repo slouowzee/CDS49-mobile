@@ -251,11 +251,11 @@ Future<Map<String, dynamic>?> loginUser(String mail,String paswd) async {
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: jsonEncode(<String, String>{
+        body: jsonEncode(<String, dynamic>{
           'nom': nom,
           'prenom': prenom,
           'email': email,
-          'telephone': telephone,
+          'telephone': telephone.isEmpty ? null : telephone,
           'motdepasse': password,
           'datenaissance': dateNaissance,
         }),

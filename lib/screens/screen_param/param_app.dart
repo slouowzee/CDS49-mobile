@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobil_cds49/models/usr.dart';
 import 'package:mobil_cds49/services/api/gestionUsr/usr_api.dart';
 import 'package:mobil_cds49/services/theme/gestion_theme.dart';
-import 'package:mobil_cds49/screens/screen_examens/mes_examens.dart';
+import 'package:mobil_cds49/screens/screen_documents/mes_documents.dart';
 
 
 // Ecran de paramètres de l'application
@@ -141,7 +141,7 @@ class _ParamAppState extends State<ParamApp> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const MesExamens(),
+                          builder: (context) => const MesDocuments(),
                         ),
                       );
                     },
@@ -150,9 +150,9 @@ class _ParamAppState extends State<ParamApp> {
                       child: Row(
                         children: [
                           Icon(
-                            Icons.school,
+                            Icons.folder_open,
                             size: 32,
-                            color: Colors.blue,
+                            color: Colors.orange,
                           ),
                           SizedBox(width: 16),
                           Expanded(
@@ -160,7 +160,7 @@ class _ParamAppState extends State<ParamApp> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Mes examens',
+                                  'Mes documents',
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
@@ -168,7 +168,7 @@ class _ParamAppState extends State<ParamApp> {
                                 ),
                                 SizedBox(height: 4),
                                 Text(
-                                  'Voir l\'historique de mes tests',
+                                  'Gérer mes documents administratifs',
                                   style: TextStyle(
                                     fontSize: 14,
                                     color: Colors.grey,
