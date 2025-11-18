@@ -103,6 +103,17 @@ class _LoginUtilisateurState extends State<LoginUtilisateur> {
               },
               child: Text('Pas encore inscrit ? Inscrivez-vous'),
             ),
+            SizedBox(height: 10),
+            TextButton.icon(
+              onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => MyHomePage(title: 'CDS 49')),
+                );
+              },
+              icon: Icon(Icons.home),
+              label: Text('Retour à l\'accueil'),
+            ),
           ],
         ),
       ),

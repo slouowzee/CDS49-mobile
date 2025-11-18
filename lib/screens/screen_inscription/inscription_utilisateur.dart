@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobil_cds49/main.dart';
 import 'package:mobil_cds49/screens/screen_login/log_user.dart';
 import 'package:mobil_cds49/services/api/gestionUsr/usr_api.dart';
 
@@ -388,8 +389,20 @@ class _PageInscriptionState extends State<PageInscription> {
                 );
               },
               child: Text('Déjà inscrit ? Connectez-vous'),
-              ),
-            ],
+            ),
+            SizedBox(height: 10),
+            TextButton.icon(
+              onPressed: () {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => MyHomePage(title: 'CDS 49')),
+                  (route) => false,
+                );
+              },
+              icon: Icon(Icons.home),
+              label: Text('Retour à l\'accueil'),
+            ),
+          ],
         ),
       ),
     );

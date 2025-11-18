@@ -27,8 +27,9 @@ void main() async {
 
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   // Chargement des thèmes avant de lancer l'application  
-  // await <Methode pour consulter le thème préféré de l'utilisateur>; 
-  // pour éviter les erreurs de thème non chargé
+  // Charge la préférence de thème sauvegardée
+  await themeController.loadTheme();
+  
   List<ThemeData> listtheme = await loadDataBeforeRunningApp();
   ThemeData lightTheme = listtheme[0];
   ThemeData darkTheme = listtheme[1];   

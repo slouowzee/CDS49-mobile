@@ -21,6 +21,15 @@ class _ParamAppState extends State<ParamApp> {
   void initState() {
     super.initState();
     _loadUserInfo();
+    _loadThemePreference();
+  }
+
+  Future<void> _loadThemePreference() async {
+    // Charge la préférence de thème
+    await themeController.loadTheme();
+    setState(() {
+      light = themeController.value == ThemeMode.dark;
+    });
   }
 
   Future<void> _loadUserInfo() async {
