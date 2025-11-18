@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mobil_cds49/main.dart';
-import 'package:mobil_cds49/screens/screen_accueil/accueil.dart';
 import 'package:mobil_cds49/screens/screen_login/log_user.dart';
 import 'package:mobil_cds49/services/api/gestionUsr/usr_api.dart';
 
@@ -111,6 +110,7 @@ class _PageInscriptionState extends State<PageInscription> {
     }
 
     // Nettoyer le téléphone (enlever espaces, points, tirets) avant envoi
+    // Envoyer chaîne vide si non renseigné (pour compatibilité PHP strict)
     final telephoneToSend = telephone.isEmpty 
         ? "" 
         : telephone.replaceAll(RegExp(r'[\s\.\-]'), '');
@@ -155,7 +155,7 @@ class _PageInscriptionState extends State<PageInscription> {
       nom: nom,
       prenom: prenom,
       email: email,
-      telephone: telephoneToSend.isEmpty ? null : telephoneToSend,
+      telephone: telephoneToSend,
       password: password,
       dateNaissance: dateNaissance,
     );
@@ -173,10 +173,11 @@ class _PageInscriptionState extends State<PageInscription> {
           backgroundColor: Colors.green,
         ),
       );
-      // Redirection vers la page de connexion
-      Navigator.pushReplacement(
+      // Redirection vers la page principale
+      Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => const Accueil()),
+        MaterialPageRoute(builder: (context) => MyHomePage(title: 'CDS 49')),
+        (route) => false,
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(

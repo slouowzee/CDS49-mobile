@@ -231,7 +231,7 @@ Future<Map<String, dynamic>?> loginUser(String mail,String paswd) async {
     required String nom,
     required String prenom,
     required String email,
-    String? telephone,
+    required String telephone,
     required String password,
     required String dateNaissance,
   }) async {
@@ -241,7 +241,7 @@ Future<Map<String, dynamic>?> loginUser(String mail,String paswd) async {
     print('[DEBUG REGISTER] 👤 Nom: $nom');
     print('[DEBUG REGISTER] 👤 Prénom: $prenom');
     print('[DEBUG REGISTER] 📧 Email: $email');
-    print('[DEBUG REGISTER] 📞 Téléphone: ${telephone ?? "Non renseigné"}');
+    print('[DEBUG REGISTER] 📞 Téléphone: ${telephone.isEmpty ? "Non renseigné" : telephone}');
     print('[DEBUG REGISTER] 🎂 Date de naissance: $dateNaissance');
     print('[DEBUG REGISTER] 🌐 URL: ${AppConfig.apiBaseUrl}/api/register');
 
@@ -255,7 +255,7 @@ Future<Map<String, dynamic>?> loginUser(String mail,String paswd) async {
           'nom': nom,
           'prenom': prenom,
           'email': email,
-          'telephone': (telephone == null || telephone.isEmpty) ? null : telephone,
+          'telephone': telephone,
           'motdepasse': password,
           'datenaissance': dateNaissance,
         }),
@@ -266,7 +266,7 @@ Future<Map<String, dynamic>?> loginUser(String mail,String paswd) async {
         'nom': nom,
         'prenom': prenom,
         'email': email,
-        'telephone': telephone ?? 'null',
+        'telephone': telephone.isEmpty ? 'vide' : telephone,
         'motdepasse': '***',
         'datenaissance': dateNaissance,
       })}');
