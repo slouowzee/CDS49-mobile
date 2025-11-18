@@ -21,7 +21,6 @@ class AppConfig {
     //CHANGER ICI POUR PASSER EN PRODUCTION
    // final jsonString = await rootBundle.loadString('assets/env.prod.json');
     final jsonString = await rootBundle.loadString('assets/env.dev.json');
-    //final jsonString = await rootBundle.loadString('assets/env.test.json');
     final Map<String, dynamic> config = jsonDecode(jsonString);
 
     if (kIsWeb) {
