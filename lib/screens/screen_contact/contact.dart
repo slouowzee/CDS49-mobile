@@ -3,11 +3,11 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
-const LatLng autoEcoleLocation = LatLng(47.4739, -0.5554);
+const LatLng autoEcoleLocation = LatLng(47.4548178, -0.5622276);
 
 
 class ContactPage extends StatelessWidget {
-  const ContactPage({Key? key}) : super(key: key);
+  const ContactPage({super.key});
 
   // Fonction pour afficher la boîte de dialogue de confirmation
   Future<void> _confirmAndCall(BuildContext context, String phoneNumber) async {
@@ -116,6 +116,43 @@ class ContactPage extends StatelessWidget {
                       leading: Icon(Icons.access_time),
                       title: Text('Horaires d\'ouverture'),
                       subtitle: Text('Lundi - Vendredi: 9h - 18h\nSamedi: 10h - 14h\nDimanche: Fermé'),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.map),
+                      title: Text('Localisation'),
+                      subtitle: Text('2 Rue Adrien Recouvreur, 49100 Angers'),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SizedBox(
+                        height: 300,
+                        child: FlutterMap(
+                          options: MapOptions(
+                            initialCenter: autoEcoleLocation,
+                            initialZoom: 15.0,
+                          ),
+                          children: [
+                            TileLayer(
+                              urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                              subdomains: ['a', 'b', 'c'],
+                            ),
+                            MarkerLayer(
+                              markers: [
+                                Marker(
+                                  width: 80.0,
+                                  height: 80.0,
+                                  point: autoEcoleLocation,
+                                  child: Icon(
+                                    Icons.location_pin,
+                                    color: Colors.red,
+                                    size: 40,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ],
                 ),
