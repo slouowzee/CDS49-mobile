@@ -73,7 +73,6 @@ flutter:
     - assets/theme/
     - assets/env.dev.json
     - assets/env.prod.json
-    - assets/env.test.json
 
   #   - images/a_dot_ham.jpeg
 

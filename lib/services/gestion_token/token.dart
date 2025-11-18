@@ -19,7 +19,7 @@ class GestionToken
 //Permet de ce déloger de l'utilisateur en supprimant le token
   static Future<void> logout() async {
   final prefs = await SharedPreferences.getInstance();
-  await prefs.remove('auth_token'); 
+  await prefs.remove('auth_token');
   }
 
 //permet de récupérer le token de l'utilisateur

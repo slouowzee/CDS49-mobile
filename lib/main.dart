@@ -180,11 +180,15 @@ class _MyHomePageState extends State<MyHomePage> {
                   icon: const Icon(Icons.logout),
                   onPressed: () async {
                     await GestionToken.logout();
+                    // Réinitialise le thème à clair lors de la déconnexion
+                    await themeController.resetToLight();
                     if (mounted) {
                       setState(() {
                         currentPageIndex = 0;
                         currentBody = Accueil(onNavigate: afficherNouvellePage);
                       });
+                      // Force le rebuild pour appliquer le thème
+                      setState(() {});
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Déconnexion réussie')),
                       );

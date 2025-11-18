@@ -77,12 +77,12 @@ class _ParamAppState extends State<ParamApp> {
                         Center(
                           child : Switch(
                             value: light, 
-                            onChanged: (bool value) {
+                            onChanged: (bool value) async {
                               setState(() {
                                 light = value;
                               });
                               // Appelle le contrôleur de thème pour changer le thème
-                              themeController.toggleTheme();
+                              await themeController.toggleTheme();
                             },
                           ),
                         ),
