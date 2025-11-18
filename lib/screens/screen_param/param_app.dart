@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mobil_cds49/models/usr.dart';
 import 'package:mobil_cds49/services/api/gestionUsr/usr_api.dart';
 import 'package:mobil_cds49/services/theme/gestion_theme.dart';
-import 'package:mobil_cds49/screens/screen_documents/mes_documents.dart';
 
 
 // Ecran de paramètres de l'application
@@ -132,55 +131,6 @@ class _ParamAppState extends State<ParamApp> {
                                   Text('Date de naissance : ${userInfo!.datenaissanceeleve ?? "Non renseigné"}'),
                                 ],
                               ),
-                  ),
-                ),
-                Card(
-                  margin: EdgeInsets.all(12),
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const MesDocuments(),
-                        ),
-                      );
-                    },
-                    child: Padding(
-                      padding: EdgeInsets.all(16),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.folder_open,
-                            size: 32,
-                            color: Colors.orange,
-                          ),
-                          SizedBox(width: 16),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Mes documents',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                SizedBox(height: 4),
-                                Text(
-                                  'Gérer mes documents administratifs',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Icon(Icons.chevron_right),
-                        ],
-                      ),
-                    ),
                   ),
                 ),
               ],
