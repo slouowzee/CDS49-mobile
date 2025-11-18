@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobil_cds49/main.dart';
+import 'package:mobil_cds49/screens/screen_accueil/accueil.dart';
 import 'package:mobil_cds49/screens/screen_login/log_user.dart';
 import 'package:mobil_cds49/services/api/gestionUsr/usr_api.dart';
 
@@ -154,7 +155,7 @@ class _PageInscriptionState extends State<PageInscription> {
       nom: nom,
       prenom: prenom,
       email: email,
-      telephone: telephoneToSend, // Envoyer "Non renseigné" si vide
+      telephone: telephoneToSend.isEmpty ? null : telephoneToSend,
       password: password,
       dateNaissance: dateNaissance,
     );
@@ -175,7 +176,7 @@ class _PageInscriptionState extends State<PageInscription> {
       // Redirection vers la page de connexion
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const LoginUtilisateur()),
+        MaterialPageRoute(builder: (context) => const Accueil()),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
